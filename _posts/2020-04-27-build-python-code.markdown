@@ -66,8 +66,8 @@ $ conda install ./**/*.tar.bz2
 
 
 ### 3. Test the Package
-During testing, my preference is to test the package and not the code, as it is the package that 
-will be ultimately the artifact that is transferred to other developers.
+During testing, my preferred approach is to test the package and not the code, as it is the package that 
+will ultimately be the artifact that is transferred to other developers.
 
 {% highlight bash %}
 (test-env) $ make test-package
@@ -85,20 +85,20 @@ $ cd .. && \
 
 ### 4. Release the Package
 
-Releasing the package requires login credentials for an Anaconda account (which can be created for free).
+Releasing the package requires login credentials for an Anaconda account, which can be created for free.
 
 {% highlight bash %}
 (test-env) $ anaconda login 
 # --> enter your credentials
 {% endhighlight %}
 
-Upon uploading the package, other developers will be able to install it from the anaconda channel.
+Once uploaded, other developers will be able to install the package from an Anaconda channel.
 
 {% highlight bash %}
 (test-env) $ anaconda upload ./template*.tar.bz2
 {% endhighlight %}
 
-The package associated with my Anaconda account and channel, for example, may be installed, as follows:
+For example, installing the package associated with my Anaconda account may be accomplished, as follows:
 
 {% highlight bash %}
 (test-env) $ conda install -c pyt3r template
@@ -109,9 +109,11 @@ The package associated with my Anaconda account and channel, for example, may be
 
 Developers can leverage CI/CD pipeline tools to automate the aforementioned steps.  
 
-Using Azure Pipelines, for example, the [builds][azure-build] for [my template github repository][template-repository] are 
-triggered each time that the master branch changes.
+Using Azure Pipelines, for example, the [builds][azure-build] for [my template github repository][template-repository] 
+are triggered each time that the master branch changes.
 
+This preference, along with the end-to-end build approach discussed in this post, 
+has been configured in [template-package/azure-pipelines.yml].
 
 
 
@@ -120,3 +122,4 @@ triggered each time that the master branch changes.
 [template-package/ci/test-env-requirements.yml]: https://github.com/pyt3r/template-package/blob/master/ci/test-env-requirements.yml
 [asset]: ../assets/2020-04-27-build-python-code.png
 [azure-build]: https://dev.azure.com/pyt3r/template/_build
+[template-package/azure-pipelines.yml]: https://github.com/pyt3r/template-package/blob/master/azure-pipelines.yml
