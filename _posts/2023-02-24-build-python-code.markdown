@@ -119,6 +119,6 @@ has been configured in [template-package/azure-pipelines.yml].
 [mini-conda]: https://docs.conda.io/en/latest/miniconda.html
 [template-repository]: https://github.com/pyt3r/template-package
 [template-package/ci/test-env-requirements.yml]: https://github.com/pyt3r/template-package/blob/master/ci/test-env-requirements.yml
-[asset]: ../assets/2020-04-27-build-python-code.png
+[asset]: ../assets/2023-02-24-build-python-code.png
 [azure-build]: https://dev.azure.com/pyt3r/template/_build
 [template-package/azure-pipelines.yml]: https://github.com/pyt3r/template-package/blob/master/azure-pipelines.yml
