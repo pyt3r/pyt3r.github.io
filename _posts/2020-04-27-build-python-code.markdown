@@ -2,7 +2,7 @@
 layout: post
 title:  Build and Release Python Code with Conda
 date:   2020-04-27 00:00:00 -0000
-tags: conda, anaconda, python, build, package, test, upload, release, devops, makefile
+tags: conda, anaconda, python, azure, pipelines, build, package, test, upload, release, devops, makefile
 ---
 
 Building and releasing packages gives developers a mechanism to securely transfer versions of their code 
@@ -12,7 +12,7 @@ While developers can facilitate builds and releases in many ways,
 I've outlined one of my favorite approaches in the following four steps.
 
 To exemplify each step, I've shared the commands that I use
-to build and release the python code saved in
+to build and release the code saved in
 [my template github repository][template-repository].
 
 
@@ -26,8 +26,8 @@ to build and release the python code saved in
 
 ### 1. Create the Environment
 
-The virtual environment contains the dependencies of the code that is to be packaged,
-along with the dependencies required by the conda build tools.
+Beginning with a virtual environment allows developers to easily install and manage the dependencies 
+of the code that is to be packaged, along with the dependencies required by the conda build tools.
 
 {% highlight bash %}
 $ git clone https://github.com/pyt3r/template-package.git
@@ -39,7 +39,7 @@ $ make test-env
 $ conda activate test-env
 {% endhighlight %}
 
-Uncovering the makefile command reveals that these dependencies are set in
+Uncovering the makefile command reveals that the environment is installed from the dependencies declared in
 [template-package/ci/test-env-requirements.yml].
 
 {% highlight bash %}
@@ -50,7 +50,8 @@ $ conda env create \
 
 
 ### 2. Build the Package
-The build step gathers and consolidates the python files into a tarball.
+With the virtual environment activated, the build step, then, gathers and consolidates the python files into a 
+standalone, installable tarball.
 
 {% highlight bash %}
 (test-env) $ make conda-package
@@ -65,10 +66,8 @@ $ conda install ./**/*.tar.bz2
 
 
 ### 3. Test the Package
-Upon invoking tests, it's critical to test the package and not the code.
-
-To ensure that the tests run against the package,
-the following makefile command navigates away from the importable code prior to running the tests.
+During testing, my preference is to test the package and not the code, as it is the package that 
+will be ultimately the artifact that is transferred to other developers.
 
 {% highlight bash %}
 (test-env) $ make test-package
@@ -86,25 +85,38 @@ $ cd .. && \
 
 ### 4. Release the Package
 
-Releasing the package requires login credentials for an Anaconda account, which can be created for free.
+Releasing the package requires login credentials for an Anaconda account (which can be created for free).
 
 {% highlight bash %}
 (test-env) $ anaconda login 
 # --> enter your credentials
 {% endhighlight %}
 
+Upon uploading the package, other developers will be able to install it from the anaconda channel.
+
 {% highlight bash %}
 (test-env) $ anaconda upload ./template*.tar.bz2
 {% endhighlight %}
 
-Upon uploading the package, others will be able to install it. 
-The package associated with my Anaconda account, for example, can be installed, as follows:
+The package associated with my Anaconda account and channel, for example, may be installed, as follows:
 
 {% highlight bash %}
 (test-env) $ conda install -c pyt3r template
 {% endhighlight %}
 
+
+### Pipelining
+
+Developers can leverage CI/CD pipeline tools to automate the aforementioned steps.  
+
+Using Azure Pipelines, for example, the [builds][azure-build] for [my template github repository][template-repository] are 
+triggered each time that the master branch changes.
+
+
+
+
 [mini-conda]: https://docs.conda.io/en/latest/miniconda.html
 [template-repository]: https://github.com/pyt3r/template-package
 [template-package/ci/test-env-requirements.yml]: https://github.com/pyt3r/template-package/blob/master/ci/test-env-requirements.yml
 [asset]: ../assets/2020-04-27-build-python-code.png
+[azure-build]: https://dev.azure.com/pyt3r/template/_build
