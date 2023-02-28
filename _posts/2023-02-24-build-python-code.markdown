@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Build and Release Python Code with Conda
-date:   2020-04-27 00:00:00 -0000
+date:   2023-02-23 12:00:00 -0000
 tags: conda, anaconda, python, azure, pipelines, build, package, test, upload, release, devops, makefile
 ---
 
@@ -88,8 +88,7 @@ $ cd .. && \
 Releasing the package requires login credentials for an Anaconda account, which can be created for free.
 
 {% highlight bash %}
-(test-env) $ anaconda login 
-# --> enter your credentials
+(test-env) $ anaconda login
 {% endhighlight %}
 
 Once uploaded, other developers will be able to install the package from an Anaconda channel.
