@@ -14,34 +14,87 @@ and observe the updated results.
 
 Consider the case of a data analyst that processes and 
 visualizes historical price data in order to devise a trading strategy.
-The analyst attempts different data cleansing and statistical techniques before
+The analyst attempts different data cleansing and statistical techniques before 
 formulating the final strategy. 
-As the number of attempts increases, each version of code, and corresponding result,
-becomes difficult to organize. 
-Ultimately, the analyst acknowledges that their efforts would have benefited from a 
-framework capable of both tracking, and re-creating the results of, their previous attempts.
+As the number of attempts increases, each version of code, and its respective result, 
+becomes difficult to manage. 
 
-The following post describes one [framework-based solution][workflow-code] that this particular 
-data analyst wishes they had during their quest for a trading strategy.
+Ultimately, the analyst acknowledges their need for a tool capable of managing, tracking, 
+and re-creating the results of their previous attempts. 
+The following post describes one such [framework-based solution][workflow-code]
+that this analyst could have benefited from.
 
 
-#### Analysis #1
+### Analysis #1: Raw Visualization
+
+Taking the previous example of devising a trading strategy, the data analyst might have started with a 
+simple workflow to visualize the raw timeseries data. 
+
+Using the framework, the first analysis could have been coded as follows:
 
 <script src="https://gist.github.com/pyt3r/c47436e6b26448a95f53caf6e68e3d20.js"></script>
 
+(*The full snippet may be found under [practice/examples/workflow/analysis.py][workflow-example]*)
 
-#### Analysis #2
+Prior to running the *Analysis1* object, the analyst could invoke the **.asDF()** method to 
+inspect and visualize their workflow as a DataFrame:
 
-#### Analysis #3
+![dataframe-1]
 
-#### Analysis #4
+For each row in the DataFrame:
+
+* The function specified by the **funcPath** column is computed using the args and 
+  kwargs specified by the **inputKeys** and **kwargs** columns, respectively.  
+
+* The corresponding results of the function are, then, registered using the keys 
+  specified in the **outputKeys** column.
+
+Once the calculation of the last row completes, then all **outputKeys** can be accessed.
+Accessing the 'fig' **outputKey** from the registered results, for example, would yield the following figure:
+
+![plot-1]
+
+*The data used on this page was retrieved through the [Quandl License][quandl],
+which is approved for Commercial Use*
+
+### Analysis #2: Isolating the Test Period
+The analyst might then decide they wish to examine the economic downturn period more closely 
+and work towards a strategy that minimizes downside risk.  
+
+Accordingly, the analyst might adjust their prior workflow to isolate the downturn period, as follows:
+
+![dataframe-2]
+
+Accessing the 'fig' **outputKey** for this workflow would then yield the following figure:
+
+![plot-2]
+
+
+
+### Analysis #3: Finalizing the Strategy
+
+Through visually inspecting the sharp price fluctuations during the downturn period, 
+the analyst believes that a simple strategy using a long and short simple moving average (SMA) 
+might perform well.
+
+![dataframe-3]
+
+Such a strategy involves buying when the short SMA crosses over the long SMA in the positive direction, and
+selling when the long SMA crosses over the short SMA in the negative direction,
+as depicted in the following chart:
+
+![plot-3]
+
+*The implementations of other technical indicators may be found [here][read-the-docs].*
 
 ## Features
 
-#### Serialization
+By stepping through the previous examples, a few beneficial features of the framework become uncovered.
 
-The data analyst can use the framework to transfer their workflow to a recipient. 
-Similarly, the recipient can use the framework to import, and run, the 
+#### 1) Serialization
+
+Users can leverage the framework to transfer their workflow to a recipient, such as a colleague or manager. 
+On the receiving end, the recipient can use the framework to seamlessly import, and run, the 
 transferred workflow.
 
 {% highlight python %}
@@ -53,6 +106,10 @@ DF.to_csv("workflow1.csv")
 # == Import ==
 DF = pd.read_csv("workflow1.csv")
 workflow = api.Workflow.createFromDF(DF)
+data = {
+    "ticker"   : "jpm",
+    "dateCol"  : "Date",
+    "valueCol" : "Close", }
 results = workflow.run(data)
 {% endhighlight %}
 
@@ -61,11 +118,51 @@ As an added benefit, the serialization feature allows workflow code to be saved 
 as data in a database or filesystem, for example, and not as source code in a version control system.
 
 
+#### 2) Graphical Representation
+
+Prior to invoking any workflow, users can generate the workflow's corresponding 
+Directed Acyclic Graph (DAG), as depicted in the following image:
+
+![dag-123]
+
+
+#### 3) Tweak-ability
+
+Workflows can be easily adjusted by adding, removing, and inserting tasks, and/or altering configuration data.
+
+
+#### 4) Debug-ability
+
+Users can step through any given workflow, as exemplified in the following snippet:
+
+{% highlight python %}
+
+workflow = Analysis1.create()
+
+data0 = {
+    "ticker"   : "jpm",
+    "dateCol"  : "Date",
+    "valueCol" : "Close", }
+
+data1 = workflow.runNext(data0)
+data2 = workflow.runNext(data1)
+data3 = workflow.run(data2)
+
+{% endhighlight %}
+
+
 
 
 [mini-conda]: https://docs.conda.io/en/latest/miniconda.html
 [workflow-code]: https://github.com/pyt3r/practice-package/blob/master/practice/frameworks/workflow/workflow.py
-[asset-1]: ../assets/2023-04-05-workflow-1.png
-[asset-2]: ../assets/2023-04-05-workflow-2.png
-[asset-3]: ../assets/2023-04-05-workflow-3.png
-[asset-4]: ../assets/2023-04-05-workflow-4.png
+[workflow-example]: https://github.com/pyt3r/practice-package/blob/master/practice/examples/workflow/analysis.py
+[quandl]: https://github.com/quandl/quandl-python/blob/master/LICENSE.txt
+[read-the-docs]: https://practice-package.readthedocs.io/en/latest/technical_analysis.html
+[dataframe-1]: ../assets/2023-04-05-dataframe-1.png
+[dataframe-2]: ../assets/2023-04-05-dataframe-2.png
+[dataframe-3]: ../assets/2023-04-05-dataframe-3.png
+[plot-1]: ../assets/2023-04-05-plot-1.png
+[plot-2]: ../assets/2023-04-05-plot-2.png
+[plot-3]: ../assets/2023-04-05-plot-3.png
+[dag-123]: ../assets/2023-04-05-dag.png
+
