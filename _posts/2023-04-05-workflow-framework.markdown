@@ -2,7 +2,7 @@
 layout: post
 title:  A Data-Driven Workflow Framework in Python
 date:   2023-04-05 12:00:00 -0000
-tags: workflow, data science, analytics, python, software framework, code as data
+tags: workflow, framework, python, data driven, data analytics, code as data
 ---
 
 Often, data analysts and developers find themselves writing code that can be represented 
@@ -22,31 +22,32 @@ becomes difficult to manage.
 Ultimately, the analyst acknowledges their need for a tool capable of managing, tracking, 
 and re-creating the results of their previous attempts. 
 The following post describes one such [framework-based solution][workflow-code]
-that this analyst could have benefited from.
+that the analyst could benefit from.
 
 
 ### Analysis #1: Raw Visualization
 
-Taking the previous example of devising a trading strategy, the data analyst might have started with a 
+Taking the previous example, the data analyst might have started with a 
 simple workflow to visualize the raw timeseries data. 
 
-Using the framework, the first analysis could have been coded as follows:
+Using the framework, the first analytical workflow could have been coded as follows:
+
+(*The full snippet can be found under [practice/examples/workflow/analysis.py][workflow-example]*.)
 
 <script src="https://gist.github.com/pyt3r/c47436e6b26448a95f53caf6e68e3d20.js"></script>
 
-(*The full snippet may be found under [practice/examples/workflow/analysis.py][workflow-example]*)
-
-Prior to running the *Analysis1* object, the analyst could invoke the **.asDF()** method to 
-inspect and visualize their workflow as a DataFrame:
+Prior to running the workflow object from the above snippet, 
+the analyst could inspect and visualize the workflow as data by invoking the **.asDF()** method.
+The resulting DataFrame-based representation would appear as follows:
 
 ![dataframe-1]
 
-For each row in the DataFrame:
+For each row in the DataFrame,
 
-* The function specified by the **funcPath** column is computed using the args and 
-  kwargs specified by the **inputKeys** and **kwargs** columns, respectively.  
+* The function specified by the **funcPath** column consumes the args and kwargs 
+  specified by the **inputKeys** and **kwargs** columns, respectively. 
 
-* The corresponding results of the function are, then, registered using the keys 
+* The corresponding result of the function is, then, registered using the key 
   specified in the **outputKeys** column.
 
 Once the calculation of the last row completes, then all **outputKeys** can be accessed.
@@ -54,56 +55,61 @@ Accessing the 'fig' **outputKey** from the registered results, for example, woul
 
 ![plot-1]
 
-*The data used on this page was retrieved through the [Quandl License][quandl],
-which is approved for Commercial Use*
+(*The data presented on this page is approved for commercial use, as evident by the [Quandl License][quandl].*)
 
 ### Analysis #2: Isolating the Test Period
-The analyst might then decide they wish to examine the economic downturn period more closely 
+The analyst might then decide to examine the economic downturn period more closely 
 and work towards a strategy that minimizes downside risk.  
 
 Accordingly, the analyst might adjust their prior workflow to isolate the downturn period, as follows:
 
 ![dataframe-2]
 
-Accessing the 'fig' **outputKey** for this workflow would then yield the following figure:
+Accessing the 'fig' **outputKey** for this adjusted workflow would yield the following figure:
 
 ![plot-2]
-
 
 
 ### Analysis #3: Finalizing the Strategy
 
 Through visually inspecting the sharp price fluctuations during the downturn period, 
-the analyst believes that a simple strategy using a long and short simple moving average (SMA) 
-might perform well.
+the analyst thinks that a simple strategy using a long and short simple moving average (SMA) 
+might perform well. 
+
+As a result, the analyst tests this theory and codes the strategy as follows:
 
 ![dataframe-3]
 
-Such a strategy involves buying when the short SMA crosses over the long SMA in the positive direction, and
-selling when the long SMA crosses over the short SMA in the negative direction,
-as depicted in the following chart:
+This particular strategy involves 
+buying when the short SMA crosses over the long SMA in the positive direction, 
+and selling when the long SMA crosses over the short SMA in the negative direction, 
+as depicted by the **crossover** indicator in the following chart:
 
 ![plot-3]
 
-*The implementations of other technical indicators may be found [here][read-the-docs].*
+*[This page][read-the-docs] contains more information related to simple technical indicators,
+such as the one described above.*
 
 ## Features
 
-By stepping through the previous examples, a few beneficial features of the framework become uncovered.
+In addition to showcasing manageability, the previous examples uncover 
+three more beneficial features of the framework.
 
 #### 1) Serialization
 
-Users can leverage the framework to transfer their workflow to a recipient, such as a colleague or manager. 
-On the receiving end, the recipient can use the framework to seamlessly import, and run, the 
-transferred workflow.
+Users can leverage the framework to transfer their workflow to a recipient, such as a colleague or manager,
+as depicted in the following snippet:
 
 {% highlight python %}
-# == Export ==
 workflow = Analysis1.create()
 DF = workflow.asDF()
 DF.to_csv("workflow1.csv")
+{% endhighlight %}
 
-# == Import ==
+On the receiving end, the recipient can use the framework to seamlessly ingest, and run, the
+transferred workflow, as follows:
+
+{% highlight python %}
 DF = pd.read_csv("workflow1.csv")
 workflow = api.Workflow.createFromDF(DF)
 data = {
@@ -115,23 +121,18 @@ results = workflow.run(data)
 
 
 As an added benefit, the serialization feature allows workflow code to be saved and managed
-as data in a database or filesystem, for example, and not as source code in a version control system.
+as data in a database (or filesystem, for example), and not as source code in a VCS.
 
 
 #### 2) Graphical Representation
 
 Prior to invoking any workflow, users can generate the workflow's corresponding 
-Directed Acyclic Graph (DAG), as depicted in the following image:
+Directed Acyclic Graph (DAG), which helps to trace dependencies, as depicted in the following image:
 
 ![dag-123]
 
 
-#### 3) Tweak-ability
-
-Workflows can be easily adjusted by adding, removing, and inserting tasks, and/or altering configuration data.
-
-
-#### 4) Debug-ability
+#### 3) Debug-ability
 
 Users can step through any given workflow, as exemplified in the following snippet:
 
@@ -150,6 +151,13 @@ data3 = workflow.run(data2)
 
 {% endhighlight %}
 
+
+## Conclusion
+
+When conducting analyses, data analysts and developers carry the burden of managing workflows,
+configurations, and resulting datasets.I hope that the framework presented on this page remediates this burden,
+or at the very least, promotes an awareness of the operational pitfalls that exist 
+(and that I've too often encountered) in the analytics space.
 
 
 
