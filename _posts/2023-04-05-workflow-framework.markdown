@@ -29,21 +29,27 @@ that the analyst could benefit from.
 
 Taking the previous example, the data analyst might have started with a 
 simple workflow to visualize the raw timeseries data. 
-
-Using the framework, the first analytical workflow could have been coded as follows:
+Using the proposed framework, the analyst could have coded this workflow as follows:
 
 ![snippet-1a]
 
-Prior to running the workflow object from the above snippet, 
-the analyst could inspect and visualize the workflow as data by invoking the **.asDF()** method.
+From inspecting the snippet, the *Analysis1* class inherits from the *api.Workflow* parent class, 
+which allows for a sequence of *TASKS* to be declared.
+
+During instantiation, these *TASKS* are validated
+and can be viewed in a tabular form, as shown in the following snippet:
 
 ![snippet-1b]
 
-The resulting DataFrame-based representation would appear as follows:
+The tabular view of the *TASKS* would appear as follows:
 
 ![dataframe-1]
 
-For each row in the DataFrame,
+Once satisfied, the analyst can run the above *TASKS* by calling the following code:
+
+![snippet-1c]
+
+For each row (or *TASK*), in the workflow,
 
 * The function specified by the **funcPath** column consumes the args and kwargs 
   specified by the **inputKeys** and **kwargs** columns, respectively. 
@@ -51,11 +57,9 @@ For each row in the DataFrame,
 * The corresponding result of the function is, then, registered using the key 
   specified in the **outputKeys** column.
 
-Once the calculation of the last row completes, then all **outputKeys** can be accessed.
-Invoking the workflow, and then accessing the 'fig' **outputKey** from the registered results,
-would yield the following figure:
+Once the calculation of the last row completes, then all **outputKeys** become accessible.
+For example, accessing the *fig* **outputKey** from the registered results would yield the following figure:
 
-![snippet-1c]
 
 ![plot-1]
 
@@ -69,7 +73,7 @@ Accordingly, the analyst might adjust their prior workflow to isolate the downtu
 
 ![snippet-2]
 
-Accessing the 'fig' **outputKey** for this adjusted workflow would yield the following figure:
+Accessing the *fig* **outputKey** for this adjusted workflow would yield the following figure:
 
 ![plot-2]
 
@@ -85,8 +89,8 @@ As a result, the analyst tests this theory and codes the strategy as follows:
 ![snippet-3]
 
 This particular strategy involves 
-buying when the short SMA crosses over the long SMA in the positive direction, 
-and selling when the long SMA crosses over the short SMA in the negative direction, 
+buying when the short SMA crosses over the long SMA in the positive direction, and 
+selling when the long SMA crosses over the short SMA in the negative direction, 
 as depicted by the **crossover** indicator in the following chart:
 
 ![plot-3]
@@ -142,7 +146,6 @@ that exist throughout the course of an analysis.
 
 [mini-conda]: https://docs.conda.io/en/latest/miniconda.html
 [workflow-code]: https://github.com/pyt3r/practice-package/blob/master/practice/frameworks/workflow/workflow.py
-[workflow-example]: https://github.com/pyt3r/practice-package/blob/master/practice/examples/workflow/analysis.py
 [quandl]: https://github.com/quandl/quandl-python/blob/master/LICENSE.txt
 [read-the-docs]: https://practice-package.readthedocs.io/en/latest/technical_analysis.html
 [snippet-1a]: ../assets/2023-04-05-snippet-1a.png
