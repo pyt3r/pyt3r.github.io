@@ -24,6 +24,8 @@ While this might seem challenging, there's a simple trick to make it possible.
 
 First, let's see how deserialization might work using native pydantic:
 
+( *excerpted from [practice/examples/pydantic/ser_des.py][example-code]* )
+
 ![snippet-native-code]
 
 The four-step process of serializing and deserialzing **mulder** can be 
@@ -43,7 +45,7 @@ In other words, only someone with prior knowledge of the serialized data
 would know to import the **Character** model class and instantiate **mulder**.
 
 
-### The Trick
+### With The Trick
 
 Let's revisit the previous example with a small adjustment. 
 
@@ -68,7 +70,6 @@ let's examine one more example:
 
 ![snippet-enhanced-code-2]
 
-Not too bad.
 
 What's especially elegant here is that we only need to include the top-level 
 **pymodel**—in this case, **TvShow**—and native pydantic takes care of the **Character** 
@@ -80,7 +81,8 @@ A simple trick to streamline your pydantic (de)serialization process.
 Thanks for following along.
 
 - Peter
-
+  
+[example-code]: https://github.com/pyt3r/practice-package/blob/master/practice/examples/pydantic/ser_des.py
 [snippet-native-code]: ../assets/2024-08-15-native-code.png
 [snippet-native-chart]: ../assets/2024-08-15-native-chart.png
 [snippet-enhanced-code-1]: ../assets/2024-08-15-enhanced-code-1.png
