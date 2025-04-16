@@ -20,7 +20,7 @@ But what if a developer needs to import, or deserialize, the serialized form of 
 
 First, let’s see how a developer might do so using native `pydantic`:
 
-( *excerpted from [practice/examples/pydantic/ser_des.py][example-code]* )
+( *excerpted from [pyswark/examples/ser_des.py][example-code]* )
 
 ![snippet-native-code]
 
@@ -48,10 +48,10 @@ This time, before serialization, we’ll embed a line of metadata into the json 
 
 ![snippet-enhanced-code-1]
 
-By embedding the `pmodel` metadata, the developer no longer needs to be aware of the model class associated with the serialized data.
+By embedding the `model` metadata, the developer no longer needs to be aware of the model class associated with the serialized data.
 
-In turn, the trick — implemented under [practice/lib/pydantic/ser_des.py][example-code] — 
-is to manage this association by dynamically importing the `pmodel` class and passing its serialized data as kwargs during deserialization.
+In turn, the trick — implemented under [pyswark/lib/pydantic/ser_des.py][example-code] — 
+is to manage this association by dynamically importing the `model` class and passing its serialized `contents` data as kwargs during deserialization.
 
 The resulting (de)serialization process reduces from four steps to just two:
 
@@ -65,17 +65,16 @@ To demonstrate that the trick truly works for any model, let’s look at one mor
 
 ![snippet-enhanced-code-2]
 
-In this example, what’s especially elegant is that the developer only needs to include the top-level `pmodel`— in this case, 
+In this example, what’s especially elegant is that the developer only needs to include the top-level `model`— in this case, 
 `TvShow` — and `pydantic` natively takes care of the lower-level models, `mulder` and `scully`…
 
 And there you have it! A simple trick to streamline your `pydantic` (de)serialization process.
 
 Thanks for following along.
 
-- Pete
   
-[example-code]: https://github.com/pyt3r/practice-package/blob/master/practice/examples/pydantic/ser_des.py
-[impl-code]: https://github.com/pyt3r/practice-package/blob/master/practice/lib/pydantic/ser_des.py
+[example-code]: https://github.com/pyt3r/pyswark-package/blob/master/pyswark/examples/ser_des.py
+[impl-code]: https://github.com/pyt3r/pyswark-package/blob/master/pyswark/lib/pydantic/ser_des.py
 [snippet-native-code]: ../assets/2024-08-15-native-code.png
 [snippet-native-chart]: ../assets/2024-08-15-native-chart.png
 [snippet-enhanced-code-1]: ../assets/2024-08-15-enhanced-code-1.png
