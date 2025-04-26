@@ -50,7 +50,7 @@ This time, before serialization, we’ll embed a line of metadata into the json 
 
 By embedding the `model` metadata, the developer no longer needs to be aware of the model class associated with the serialized data.
 
-In turn, the trick — implemented under [pyswark/lib/pydantic/ser_des.py][example-code] — 
+In turn, the trick — implemented under [pyswark/lib/pydantic/ser_des.py][impl-code] — 
 is to manage this association by dynamically importing the `model` class and passing its serialized `contents` data as kwargs during deserialization.
 
 The resulting (de)serialization process reduces from four steps to just two:
