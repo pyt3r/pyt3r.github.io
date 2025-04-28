@@ -63,7 +63,7 @@ The `/lib` package is where I place **customizations and extensions to third-par
 * Likewise, AliasEnum is my custom flavor of Python enums with support for aliases.
 
     ```python
-    from pyswark.lib.enum import AliasEnum
+    from pyswark.lib.aenum import AliasEnum
     ```
   
 * If another developer were to extend `pyswark`, they might create their own `/lib/pyswark` directory to patch or override the internals.
