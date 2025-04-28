@@ -4,17 +4,20 @@ title:  A Simple Trick to (De)serialize Any Pydantic Model
 date:   2024-08-15 12:00:00 -0000
 tags: pydantic, python, serializaton, typing
 ---
+> **Note:**  
+> A version of this post was also published on [LevelUpCoding][level-up-coding].
 
-# Table of Contents
-1. [Without The Trick](#without-any-tricks)
-2. [With The Trick](#with-the-trick)
-3. [One More Example](#one-more-example)
-
-
+<br>
 
 `Pydantic` provides serialization methods to export its model objects.
 
 But what if a developer needs to import, or deserialize, the serialized form of a model object?
+
+1. [Without The Trick](#without-any-tricks)
+2. [With The Trick](#with-the-trick)
+3. [One More Example](#one-more-example)
+
+--- 
 
 ### Without the Trick
 
@@ -39,6 +42,7 @@ For instance, if a developer blindly encounters a serialized form of `mulder`, h
 In other words, only a developer with prior knowledge of the serialized data would understand that they need to import 
 the `Character` class in order to instantiate the `mulder` object.
 
+--- 
 
 ### With The Trick
 
@@ -58,6 +62,7 @@ The resulting (de)serialization process reduces from four steps to just two:
 
 ![snippet-enhanced-chart]
 
+--- 
 
 ### One More Example
 
@@ -72,7 +77,7 @@ And there you have it! A simple trick to streamline your `pydantic` (de)serializ
 
 Thanks for following along.
 
-  
+[level-up-coding]: https://levelup.gitconnected.com/a-simple-trick-to-de-serialize-any-pydantic-model-565abd0dc12f
 [example-code]: https://github.com/pyt3r/pyswark-package/blob/master/pyswark/examples/ser_des.py
 [impl-code]: https://github.com/pyt3r/pyswark-package/blob/master/pyswark/lib/pydantic/ser_des.py
 [snippet-native-code]: ../assets/2024-08-15-native-code.png
