@@ -68,7 +68,7 @@ The `/lib` package is where I place **customizations and extensions to third-par
   
 * If another developer were to extend `pyswark`, they might create their own `/lib/pyswark` directory to patch or override the internals.
 
-* **Guideline**: modules in `/lib` can be imported from anywhere in the library.
+> **Guideline**: modules in `/lib` can be imported from anywhere in the library.
 
 ---
 
@@ -84,7 +84,7 @@ This is the heart of the library, containing modules that form its foundational 
     ```
 
 
-* **Guideline**: modules in `/core` should not be imported by anything in `/lib` or `/util`.
+> **Guideline**: modules in `/core` should not be imported by anything in `/lib` or `/util`.
 
 ---
 
@@ -101,7 +101,7 @@ The `/util` package is where I stash all those low-level helpers that don’t fi
 
 * Some might argue that the previously mentioned `pyswark` I/O system belongs in `/util`, but I placed them in `/core` because they act as a framework—not just a set of helpers. It’s a judgment call, but that’s my reasoning.
 
-* **Guideline**: modules in `/util` should not be imported by anything in `/lib` or `/core`
+> **Guideline**: modules in `/util` should not be imported by anything in `/lib` or `/core`
 
 
 ---
