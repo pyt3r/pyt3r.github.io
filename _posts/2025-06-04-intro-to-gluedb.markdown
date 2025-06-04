@@ -36,8 +36,6 @@ db = api.connect( 'pyswark:/data/sma-example.gluedb' )
 
 ### Access By Name
 
-You can retrieve records by name, and GlueDb ensures all names are unique within an instance.
-
 With the instance loaded, we can view the names tagged to each record.  
 
 Gluedb ensures that names in each instance are unique.
@@ -47,7 +45,7 @@ print( db.getNames() )
 # ['JPM', 'BAC', 'kwargs']
 ```
 
-We can get a record based on its name and view its body:
+We can get the record for a data artifact based on its name:
 
 ```python
 record = db.get( 'JPM' )
@@ -69,7 +67,7 @@ Which outputs:
 }
 ```
 
-We can then acquire the record’s contents:
+We can then acquire the contents of the record:
 
 ```python
 record   = db.get( 'JPM' )
@@ -78,7 +76,7 @@ print( type( contents ))
 # <class 'pyswark.gluedb.db.Contents'>
 ```
 
-And extract the final data artifact:
+And from the contents, we can extract the final data artifact:
 
 ```python
 JPM = contents.extract()
@@ -93,7 +91,7 @@ Date
 1984-01-03  43.94  44.25  43.62   44.0  85667.0          0.0          1.0   
 ```
 
-You can also extract in one call:
+You can also extract the artifact in one call:
 
 ```python
 JPM = db.extract( "JPM" ) # via string
@@ -104,7 +102,7 @@ JPM  = db.extract( Enum.JPM.value ) # via enum
 
 ### Access by Query
 
-You can also retrieve records using SQLAlchemy expressions:
+SQLAlchemy expressions are supported in GlueDb:
 
 ```python
 from sqlalchemy import select
@@ -126,13 +124,13 @@ print([ r.info.name for r in recordsAfter2025 ])
 
 ## Managing Data Artifacts
 
-GlueDb supports REST-like operations for managing data artifacts:
+REST-like operations are used to manage the GlueDb instance:
 
 * `post`
 * `put`
 * `delete`
 
-Here's how I used these operations to create the `sma-example` database:
+For example, here's how I used these operations to create and export the `sma-example` database:
 
 ```python
 from pyswark.gluedb import api
@@ -146,8 +144,6 @@ db.post( 'kwargs', collection.Dict({ "window": 60 }))
 db.delete( 'window' )
 ```
 
-Once finalized, I exported the database as follows:
-
 ```python
 from pyswark.core.io.api import write
 
@@ -157,7 +153,7 @@ write( db, 'file:./sma-example.gluedb' )
 
 ## Use Cases
 
-GlueDb was originally built to support analytics workflows by acting as a lightweight configuration layer for data artifacts. Here's a simple example:
+GlueDb was originally built to support analytics workflows by acting as a lightweight configuration layer for data artifacts, like in the following example:
 
 ```python
 from pyswark.gluedb import api
@@ -177,7 +173,7 @@ BAC_SMA = BAC.rolling( **kwargs ).mean()
 
 ![sma-plot]
 
-This pattern keeps your code clean, decoupled, and easily configurable. Swapping in new data or parameters doesn’t require digging through logic.  It’s just a matter of updating the GlueDb instance.
+This pattern keeps the code clean, decoupled, and easily configurable. Swapping in new data or parameters doesn’t require digging through logic.  It’s just a matter of updating the GlueDb instance.
 
 ### Additional Use Cases
 
