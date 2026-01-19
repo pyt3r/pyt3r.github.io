@@ -20,12 +20,12 @@ I originally developed GlueDb to support my own analytics workflows, where keepi
 
 ## Accessing Data Artifacts
 
-Let’s walk through an example using a GlueDb instance:
+Let's walk through an example using a GlueDb instance:
 
 ```python
-from pyswark.gluedb import api
+from pyswark.core.io import api as io_api
 
-db = api.connect( 'pyswark:/data/sma-example.gluedb' )
+db = io_api.read( 'pyswark:/data/sma-example.gluedb' )
 
 ```
 
@@ -49,20 +49,17 @@ We can get the record for a data artifact based on its name:
 
 ```python
 record = db.get( 'JPM' )
-print( record.body )
+print( record.body.toJson() )
 ```
 
 Which outputs:
 
 ```json
 {
-  "model": "pyswark.gluedb.db.Contents",
+  "model": "pyswark.core.models.body.Body",
   "contents": {
-    "uri": "pyswark:/data/ohlc-jpm.csv.gz",
-    "datahandler": "",
-    "kw": {},
-    "datahandlerWrite": "",
-    "kwWrite": {}
+    "model": "pyswark.gluedb.models.IoModel",
+    "contents": "{\"uri\": \"pyswark:/data/ohlc-jpm.csv.gz\", \"datahandler\": \"\", \"kw\": {}, \"datahandlerWrite\": \"\", \"kwWrite\": {}}"
   }
 }
 ```
@@ -73,7 +70,7 @@ We can then acquire the contents of the record:
 record   = db.get( 'JPM' )
 contents = record.acquire()
 print( type( contents ))
-# <class 'pyswark.gluedb.db.Contents'>
+# <class 'pyswark.gluedb.models.IoModel'>
 ```
 
 And from the contents, we can extract the final data artifact:
@@ -102,24 +99,34 @@ JPM  = db.extract( Enum.JPM.value ) # via enum
 
 ### Access by Query
 
-SQLAlchemy expressions are supported in GlueDb:
+SQLModel expressions are supported in GlueDb:
 
 ```python
-from sqlalchemy import select
-from pyswark.gluedb import table
+from sqlmodel import Session, select
 
-recordsBefore2025 = db.getByQuery( select( table.Info ).where( 
-    table.Info.date_created < '2025-01-01' 
-))
-recordsAfter2025 = db.getByQuery( select( table.Info ).where( 
-    table.Info.date_created > '2025-01-01' 
-))
+sqlDb = db.asSQLModel()  # convert gluedb to sqlmodel
 
-print([ r.info.name for r in recordsBefore2025 ])
-# ['JPM', 'BAC']
+with Session( sqlDb.engine ) as session:
 
-print([ r.info.name for r in recordsAfter2025 ])
-# ['kwargs']
+    recordsBefore2026 = session.exec( 
+        select( sqlDb.RECORD )
+        .where( 
+            sqlDb.INFO.date_created < '2026-01-01' 
+        )
+    ).all()
+
+    recordsAfter2026 = session.exec( 
+        select( sqlDb.RECORD )
+        .where( 
+            sqlDb.INFO.date_created >= '2026-01-01' 
+        )
+    ).all()
+
+    print([ r.asModel().info.name for r in recordsBefore2026 ])
+    # ['JPM', 'BAC']
+
+    print([ r.asModel().info.name for r in recordsAfter2026 ])
+    # ['kwargs']
 ```
 
 ## Managing Data Artifacts
@@ -137,10 +144,10 @@ from pyswark.gluedb import api
 from pyswark.core.models import collection, primitive
 
 db = api.newDb()
-db.post( 'JPM', 'pyswark:/data/ohlc-jpm.csv.gz' )
-db.post( 'BAC', 'pyswark:/data/ohlc-bac.csv.gz' )
-db.post( 'window', primitive.Int("60.0") )
-db.post( 'kwargs', collection.Dict({ "window": 60 }))
+db.post( 'pyswark:/data/ohlc-jpm.csv.gz', name='JPM' )
+db.post( 'pyswark:/data/ohlc-bac.csv.gz', name='BAC' )
+db.post( primitive.Int("60.0"), name='window' )
+db.post( collection.Dict({ "window": 60 }), name='kwargs' )
 db.delete( 'window' )
 ```
 
