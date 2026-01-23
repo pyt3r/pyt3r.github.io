@@ -94,7 +94,7 @@ You can also extract the artifact in one call:
 JPM = db.extract( "JPM" ) # via string
 
 Enum = db.enum
-JPM  = db.extract( Enum.JPM.value ) # via enum
+JPM  = db.extract( Enum.JPM ) # via enum
 ```
 
 ### Access by Query
@@ -169,9 +169,9 @@ db = api.connect( 'pyswark:/data/sma-example.gluedb' )
 
 # extract the data
 Enum   = db.enum
-JPM    = db.extract( Enum.JPM.value )
-BAC    = db.extract( Enum.BAC.value )
-kwargs = db.extract( Enum.kwargs.value )
+JPM    = db.extract( Enum.JPM )
+BAC    = db.extract( Enum.BAC )
+kwargs = db.extract( Enum.kwargs )
 
 # Calculate the simple moving average (SMA)
 JPM_SMA = JPM.rolling( **kwargs ).mean()
