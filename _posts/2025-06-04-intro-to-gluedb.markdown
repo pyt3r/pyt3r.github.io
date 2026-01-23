@@ -133,10 +133,10 @@ REST-like operations are used to manage the GlueDb instance:
 For example, here's how I used these operations to create and export the `sma-example` database:
 
 ```python
-from pyswark.gluedb import api
+from pyswark.gluedb import db
 from pyswark.core.models import collection, primitive
 
-db = api.newDb()
+db = db.Db()
 db.post( 'JPM', 'pyswark:/data/ohlc-jpm.csv.gz' )
 db.post( 'BAC', 'pyswark:/data/ohlc-bac.csv.gz' )
 db.post( 'window', primitive.Int("60.0") )
