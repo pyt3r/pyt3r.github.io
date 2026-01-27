@@ -110,16 +110,14 @@ with Session( sqlDb.engine ) as session:
 
     recordsBefore2026 = session.exec( 
         select( sqlDb.RECORD )
-        .where( 
-            sqlDb.INFO.date_created < '2026-01-01' 
-        )
+        .join( sqlDb.INFO )
+        .where( sqlDb.INFO.date_created < '2026-01-01' )
     ).all()
 
     recordsAfter2026 = session.exec( 
         select( sqlDb.RECORD )
-        .where( 
-            sqlDb.INFO.date_created >= '2026-01-01' 
-        )
+        .join( sqlDb.INFO )
+        .where( sqlDb.INFO.date_created >= '2026-01-01' )
     ).all()
 
     print([ r.asModel().info.name for r in recordsBefore2026 ])
@@ -127,6 +125,8 @@ with Session( sqlDb.engine ) as session:
 
     print([ r.asModel().info.name for r in recordsAfter2026 ])
     # ['kwargs']
+
+sqlDb.dispose() # dispose the sqlmodel engine to release the connection pool
 ```
 
 ## Managing Data Artifacts
