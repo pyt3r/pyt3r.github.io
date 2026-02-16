@@ -157,6 +157,27 @@ from pyswark.core.io.api import write
 write( db, 'file:./sma-example.gluedb' )
 ```
 
+### Persisting with Db.connect
+
+In addition to `api.read` and `api.write`, GlueDb supports a context-manager pattern via `Db.connect()`. When `persist=True`, any changes made inside the `with` block are automatically written back to the `.gluedb` file on successful exit:
+
+```python
+from pyswark.gluedb.db import Db
+from pyswark.core.models import collection
+
+# Open an existing catalog with auto-save on exit
+with Db.connect('file:./sma-example.gluedb', persist=True) as db:
+    db.post( collection.Dict({ "window": 120 }), name='kwargs_120' )
+    # On exit: writes to file:./sma-example.gluedb
+
+# Verify the change persisted
+db = Db.connect('file:./sma-example.gluedb')
+print( db.getNames() )
+# ['JPM', 'BAC', 'kwargs', 'kwargs_120']
+```
+
+This is especially useful for workflows where the catalog is both read and updated in place, without having to manually call `api.write`.
+
 
 ## Use Cases
 
