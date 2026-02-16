@@ -23,9 +23,9 @@ I originally developed GlueDb to support my own analytics workflows, where keepi
 Let's walk through an example using a GlueDb instance:
 
 ```python
-from pyswark.core.io import api as io_api
+from pyswark.core.io import api
 
-db = io_api.read( 'pyswark:/data/sma-example.gluedb' )
+db = api.read( 'pyswark:/data/sma-example.gluedb' )
 
 ```
 
@@ -144,7 +144,7 @@ from pyswark.gluedb import api
 from pyswark.core.models import collection, primitive
 
 db = api.newDb()
-db.post( 'pyswark:/data/ohlc-jpm.csv.gz', name='JPM' )
+db.post( 'pyswark:/data/ohlc-jpm.csv.gz', name=Enum.JPM )
 db.post( 'pyswark:/data/ohlc-bac.csv.gz', name='BAC' )
 db.post( primitive.Int("60.0"), name='window' )
 db.post( collection.Dict({ "window": 60 }), name='kwargs' )
@@ -165,7 +165,7 @@ GlueDb was originally built to support analytics workflows by acting as a lightw
 ```python
 from pyswark.gluedb import api
 
-db = api.connect( 'pyswark:/data/sma-example.gluedb' )
+db = api.read( 'pyswark:/data/sma-example.gluedb' )
 
 # extract the data
 Enum   = db.enum
