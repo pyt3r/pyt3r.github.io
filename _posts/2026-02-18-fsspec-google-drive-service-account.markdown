@@ -13,6 +13,7 @@ tags:   infrastructure, google-drive
 5. [Share Your Drive Folder](#share-your-drive-folder)
 6. [Install Dependencies](#install-dependencies)
 7. [Connect with fsspec](#connect-with-fsspec)
+   - [Passing credentials as a dict or string](#passing-credentials-as-a-dict-or-string)
 8. [Read and Write Files](#read-and-write-files)
 9. [Using as an fsspec Backend](#using-as-an-fsspec-backend)
 10. [Final Thoughts](#final-thoughts)
@@ -119,6 +120,68 @@ fs = connect(folder_id, key_file)
 ```
 
 That's it - no browser popup, no cached tokens.
+
+### Passing credentials as a dict or string
+
+You don't have to use a key file path. PyDrive2 also accepts the key as a **dict** (e.g. from a secrets store or `api.read()`) or as a **JSON string** (e.g. from an environment variable). Useful when you load credentials once and want to avoid passing paths around, or in environments where the key is injected at runtime.
+
+**Option 1: Pass a dict**
+
+Build `GoogleAuth` with `service_config["client_json_dict"]` and pass it into `GDriveFileSystem`:
+
+```python
+from pydrive2.auth import GoogleAuth
+from pydrive2.fs import GDriveFileSystem
+
+def connect_with_keys(folder_id, keys):
+    """
+    Connect using service account credentials from a dict.
+    keys: from api.read(key_file), a secrets backend, etc.
+    Optional: include "path" in keys to use as folder_id.
+    """
+    keys = dict(keys)
+    folder_id = keys.pop("path", folder_id)  # optional custom key
+    settings = {
+        "client_config_backend": "service",
+        "service_config": {
+            "client_json_dict": keys,
+        },
+    }
+    gauth = GoogleAuth(settings=settings)
+    gauth.ServiceAuth()
+    return GDriveFileSystem(folder_id, google_auth=gauth)
+
+# Example: load once, connect without a path
+keys = api.read("./service-account-key.json")  # or from env/secrets
+folder_id = keys.get("path", "<folder_id>")
+fs = connect_with_keys(folder_id, keys)
+```
+
+**Option 2: Pass a JSON string**
+
+Use `client_json` when you have the key as a string (e.g. `json.dumps(keys)` or an env var):
+
+```python
+import json
+
+# From a dict
+client_json_str = json.dumps(keys)
+fs = GDriveFileSystem(
+    folder_id,
+    use_service_account=True,
+    client_json=client_json_str,
+)
+
+# Or from an environment variable
+import os
+fs = GDriveFileSystem(
+    folder_id,
+    use_service_account=True,
+    client_json=os.environ["GDRIVE_SERVICE_ACCOUNT_JSON"],
+)
+```
+
+No key file path is required; credentials are passed in memory.
 
 
 ## Read and Write Files
