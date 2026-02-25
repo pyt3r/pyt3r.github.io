@@ -5,7 +5,7 @@ date:   2026-02-26 12:00:00 -0000
 tags:   pyswark, sekrets, gluedb
 ---
 
-**Sekrets** are an application of [GlueDb]({% post_url 2025-06-04-intro-to-gluedb %}): they use the same idea of named records and URIs to help manage credentials and other sensitive config in one place. This post walks through creating a small **generic** sekret database, persisting it to a file using the **GITHUB_IO_DEMO** preset, and then adding another sekret via the secrets hub so that both are stored in the same file.
+**Sekrets** are an application of [GlueDb](https://pyt3r.github.io/intro-to-gluedb/): they use the same idea of named records and URIs to help manage credentials and other sensitive config in one place. This post walks through creating a small **generic** sekret database, persisting it to a file using the **GITHUB_IO_DEMO** preset, and then adding another sekret via the secrets hub so that both are stored in the same file.
 
 ## Why use sekrets?
 
