@@ -22,10 +22,10 @@ tags:   infrastructure, google-drive
 
 The standard OAuth2 flow for Google Drive requires a browser-based login, caches refresh tokens that can expire, and breaks on headless machines. A service account eliminates all of that:
 
-- **No browser required** &mdash; authentication uses a static JSON key
-- **No token expiry** &mdash; service account keys don't expire (unless you rotate them)
-- **No credential cache** &mdash; no stale tokens under `~/.cache/pydrive2fs/`
-- **CI/CD friendly** &mdash; works in pipelines, containers, and remote servers
+- **No browser required** : authentication uses a static JSON key
+- **No token expiry** : service account keys don't expire (unless you rotate them)
+- **No credential cache** : no stale tokens under `~/.cache/pydrive2fs/`
+- **CI/CD friendly** : works in pipelines, containers, and remote servers
 
 
 ## Set Up a Google Cloud Project
@@ -42,7 +42,7 @@ These two steps give your project permission to make Drive API calls. Without th
 
 1. In the same project, go to [IAM & Admin > Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts)
 2. Click **+ CREATE SERVICE ACCOUNT**
-3. Enter a name (e.g. `pydrive2-sa`) and click **CREATE AND CONTINUE**
+3. Enter a name (i.e. `pydrive2-sa`) and click **CREATE AND CONTINUE**
 4. Skip the optional "Grant access" steps and click **DONE**
 
 You'll see the service account listed with an email like:
@@ -77,7 +77,7 @@ The service account is a separate Google identity - it can only access files and
 
 1. Open [Google Drive](https://drive.google.com) in your browser
 2. Right-click the folder you want to access > **Share**
-3. Paste the service account email (e.g. `pydrive2-sa@your-project.iam.gserviceaccount.com`)
+3. Paste the service account email (i.e. `pydrive2-sa@your-project.iam.gserviceaccount.com`)
 4. Set the permission level (**Viewer** for read-only, **Editor** for read/write)
 5. Click **Send**
 
@@ -123,7 +123,7 @@ That's it - no browser popup, no cached tokens.
 
 ### Passing credentials as a dict or string
 
-You don't have to use a key file path. PyDrive2 also accepts the key as a **dict** (e.g. from a secrets store or `api.read()`) or as a **JSON string** (e.g. from an environment variable). Useful when you load credentials once and want to avoid passing paths around, or in environments where the key is injected at runtime.
+You don't have to use a key file path. PyDrive2 also accepts the key as a **dict** (i.e. from a secrets store or `api.read()`) or as a **JSON string** (i.e. from an environment variable). Useful when you load credentials once and want to avoid passing paths around, or in environments where the key is injected at runtime.
 
 **Option 1: Pass a dict**
 
@@ -159,7 +159,7 @@ fs = connect_with_keys(folder_id, keys)
 
 **Option 2: Pass a JSON string**
 
-Use `client_json` when you have the key as a string (e.g. `json.dumps(keys)` or an env var):
+Use `client_json` when you have the key as a string (i.e. `json.dumps(keys)` or an env var):
 
 ```python
 import json
